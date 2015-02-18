@@ -2,12 +2,17 @@ package com.pepegar
 
 import org.scalatest._
 
-case class Test()
+case class A(b: B, c: C)
+case class B(d: D)
+case class C(d: D)
+case class D()
 
-class InstantiatorSpec extends FlatSpec with Matchers{
-  "Instantiator".should("return the type of the param").in {
-    val ret = Instantiator.createInstance[Test](classOf[Test])
+class InstantiatorSpec extends FunSpec {
+  val ret = Instantiator.createInstance[A]
 
-    ret.toString.should(be("class com.pepegar.Test"))
-  }
+  println()
+  println(ret)
+  println()
+
+  assert(false)
 }
