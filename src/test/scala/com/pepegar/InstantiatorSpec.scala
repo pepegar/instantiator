@@ -1,13 +1,28 @@
 package com.pepegar
 
 import org.scalatest._
+import scala.reflect.runtime.universe._
 
-case class Test()
+class InstantiatorSpec extends FunSpec {
+  case class A(b: B, c: C)
+  case class B(d: D)
+  case class C(d: D)
+  case class D(left: Int, right: String)
 
-class InstantiatorSpec extends FlatSpec with Matchers{
-  "Instantiator".should("return the type of the param").in {
-    val ret = Instantiator.createInstance[Test](classOf[Test])
+  describe("Instantiator") {
+    describe("generateTypesTree") {
+      it("should create a valid tree given a type instance.") {
+        val t = typeOf[A]
+        val typesTree = Instantiator.generateTypesTree(t)
 
-    ret.toString.should(be("class com.pepegar.Test"))
+        typesTree match {
+          case Branch(name, props) => {
+            assert(props.length === 2) // A has 2 properties
+            assert(name.toString === "A")
+          }
+          case _ =>
+        }
+      }
+    }
   }
 }
