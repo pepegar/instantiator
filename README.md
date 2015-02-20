@@ -1,6 +1,6 @@
 instantiator
 ============
-[![Build Status](https://travis-ci.org/pepegar/instantiator.svg?branch=feature%2Ftype_tree)](https://travis-ci.org/pepegar/instantiator)))]]
+[![Build Status](https://travis-ci.org/pepegar/instantiator.svg?branch=feature%2Ftype_tree)](https://travis-ci.org/pepegar/instantiator)
 _Disclaimer: this is non functional yet._
 
 So, you have that problem again, you need to instantiate a huge class
