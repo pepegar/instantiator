@@ -1,3 +1,6 @@
 language: scala
 scala:
-   - 2.11.5
+- 2.11.5
+notifications:
+  slack:
+    secure: D97YDrbJun6OofeXUMk/1ejonOt6ZbsThDQLSB/ed4V8RjEFgIu9TjM3q7b5YCoYrMplbySj1qLGJcIsD+6mUyG/naBy0UJAyLGk7bthM1pfyfY66w6dGLBflYTtbWEi7PGEGBc6enHSJf6oTi7m2iAqbb1FD34XAzyt2mA8iiY=
