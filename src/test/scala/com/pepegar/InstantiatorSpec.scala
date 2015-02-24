@@ -7,7 +7,7 @@ class InstantiatorSpec extends FunSpec {
   case class A(b: B, c: C)
   case class B(d: D)
   case class C(d: D)
-  case class D(left: Int, right: String)
+  case class D(left: Int, right: Float)
 
   describe("Instantiator") {
     describe("generateTypesTree") {
@@ -15,14 +15,23 @@ class InstantiatorSpec extends FunSpec {
         val t = typeOf[A]
         val typesTree = Instantiator.generateTypesTree(t)
 
-        typesTree match {
-          case Branch(name, props) => {
-            assert(props.length === 2) // A has 2 properties
-            assert(name.toString === "A")
-          }
-          case _ =>
+        assertTree(typesTree, "A", 2)
+      }
+    }
+  }
+
+  def assertTree(tree: Tree, expectedName: String, expectedPropsLength: Int): Unit = tree match {
+    case Branch(name, props) => {
+      assert(name.toString === expectedName)
+      assert(props.length === expectedPropsLength)
+
+      props.foreach { t =>
+        t match {
+          case Branch(n, p) => assertTree(t, n.toString, p.length)
+          case _ => 
         }
       }
     }
+    case _ => 
   }
 }
