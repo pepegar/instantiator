@@ -1,10 +1,7 @@
 package com.pepegar
 
-import scala.reflect.runtime.universe._
-
-sealed abstract class Tree
-case class Branch[T](owner: T, properties: List[Tree]) extends Tree
-case class Leaf[T](value: T) extends Tree
+import com.pepegar.tree.{Branch, Tree, Leaf}
+import scala.reflect.runtime.universe.{typeOf, Type, TypeTag}
 
 /** Instantiator object is the main object and entry point to the library.
  *

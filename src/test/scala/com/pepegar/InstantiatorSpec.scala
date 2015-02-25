@@ -1,5 +1,6 @@
 package com.pepegar
 
+import com.pepegar.tree.{Branch, Tree, Leaf}
 import org.scalatest._
 import scala.reflect.runtime.universe._
 
@@ -20,7 +21,7 @@ class InstantiatorSpec extends FunSpec {
     }
   }
 
-  def assertTree(tree: Tree, expectedName: String, expectedPropsLength: Int): Unit = tree match {
+  def assertTree[T](tree: T, expectedName: String, expectedPropsLength: Int): Unit = tree match {
     case Branch(name, props) => {
       assert(name.toString === expectedName)
       assert(props.length === expectedPropsLength)
