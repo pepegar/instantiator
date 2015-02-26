@@ -28,12 +28,12 @@ object Instantiator {
    *
    * @author pepegar
    * */
-  def generateTypesTree(tpe: Type): Tree = {
+  def generateTypesTree(tpe: Type): Tree[Type] = {
     val symbol = tpe.typeSymbol
     val classProperties = tpe.members.filter(!_.isMethod)
 
     classProperties.isEmpty match {
-      case true => Leaf(symbol.name)
+      case true => Leaf(symbol.typeSignature)
       case false => Branch(classProperties.map(s => generateTypesTree(s.typeSignature)).toList)
     }
   }
