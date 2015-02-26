@@ -5,7 +5,7 @@ abstract class Tree[T] {
 }
 
 case class Branch[T](children: List[Tree[T]]) extends Tree[T] {
-  def map[U](f: T => U) = {
+  def map[U](f: T => U): Tree[U] = {
     def treeToTree(tree: Tree[T], fn: T => U): Tree[U] = {
       tree match {
         case Leaf(v) => Leaf(fn(v))

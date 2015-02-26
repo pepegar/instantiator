@@ -10,8 +10,11 @@ class TreeSpec extends FunSpec {
         val integerBranch = Branch(List(Leaf(1), Leaf(2), Leaf(3), Leaf(4)))
         val stringBranch = integerBranch.map(intToString)
 
-        stringBranch.children.foreach {
-          case Leaf(v) => assert(v.isInstanceOf[String])
+        stringBranch match {
+          case Branch(children) => children.foreach {
+            case Leaf(v) => assert(v.isInstanceOf[String])
+            case _ =>
+          }
           case _ =>
         }
       }
