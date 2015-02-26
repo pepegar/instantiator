@@ -34,7 +34,7 @@ object Instantiator {
 
     classProperties.isEmpty match {
       case true => Leaf(symbol.name)
-      case false => Branch(symbol.name, classProperties.map(s => generateTypesTree(s.typeSignature)).toList)
+      case false => Branch(classProperties.map(s => generateTypesTree(s.typeSignature)).toList)
     }
   }
 }
