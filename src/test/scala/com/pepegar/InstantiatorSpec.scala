@@ -11,11 +11,11 @@ class InstantiatorSpec extends FunSpec {
   case class D(left: Int, right: Float)
 
   describe("Instantiator") {
+    val t = typeOf[A]
+    val typesTree = Instantiator.generateTypesTree(t)
+
     describe("generateTypesTree") {
       it("should create a valid tree given a type instance.") {
-        val t = typeOf[A]
-        val typesTree = Instantiator.generateTypesTree(t)
-
         assertTreeLengths(typesTree)
       }
     }
@@ -34,12 +34,12 @@ class InstantiatorSpec extends FunSpec {
           c2.foreach {
             // this branch should represent the D type
             case Branch(c3) => assert(c3.length === 2)
-            case _ => 
+            case _ =>
           }
         }
-        case _ => 
+        case _ =>
       }
     }
-    case _ => 
+    case _ =>
   }
 }

@@ -1,7 +1,7 @@
 package com.pepegar
 
-import com.pepegar.tree.{Branch, Tree, Leaf}
-import scala.reflect.runtime.universe.{typeOf, Type, TypeTag}
+import com.pepegar.tree._
+import scala.reflect.runtime.universe.{typeOf, Type, ClassSymbol, TypeTag}
 
 /** Instantiator object is the main object and entry point to the library.
  *
@@ -28,12 +28,12 @@ object Instantiator {
    *
    * @author pepegar
    * */
-  def generateTypesTree(tpe: Type): Tree[Type] = {
+  def generateTypesTree(tpe: Type): Tree[ClassSymbol] = {
     val symbol = tpe.typeSymbol
     val classProperties = tpe.members.filter(!_.isMethod)
 
     classProperties.isEmpty match {
-      case true => Leaf(symbol.typeSignature)
+      case true => Leaf(symbol.asClass)
       case false => Branch(classProperties.map(s => generateTypesTree(s.typeSignature)).toList)
     }
   }
