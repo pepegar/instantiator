@@ -2,6 +2,7 @@ package com.pepegar
 
 import com.pepegar.tree._
 import scala.reflect.runtime.universe.{typeOf, Type, ClassSymbol, TypeTag}
+import util.Random
 
 /** Instantiator object is the main object and entry point to the library.
  *
@@ -35,6 +36,18 @@ object Instantiator {
     classProperties.isEmpty match {
       case true => Leaf(symbol.asClass)
       case false => Branch(classProperties.map(s => generateTypesTree(s.typeSignature)).toList)
+    }
+  }
+
+  def mapToValuesTree(typesTree: Tree[ClassSymbol]): Tree[Any] = {
+    typesTree.map(symbolToValue)
+  }
+
+  def symbolToValue(s: ClassSymbol): Any = {
+    s.toString match {
+      case "class Int" => Random.nextInt
+      case "class String" => Random.alphanumeric.take(10).toList.mkString("")
+      case _ =>
     }
   }
 }

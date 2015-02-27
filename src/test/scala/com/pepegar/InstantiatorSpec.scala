@@ -4,7 +4,7 @@ import com.pepegar.tree.{Branch, Tree, Leaf}
 import org.scalatest._
 import scala.reflect.runtime.universe._
 
-class InstantiatorSpec extends FunSpec {
+class InstantiatorSpec extends FunSpec with Matchers {
   case class A(b: B, c: C)
   case class B(d: D)
   case class C(d: D)
@@ -17,6 +17,34 @@ class InstantiatorSpec extends FunSpec {
     describe("generateTypesTree") {
       it("should create a valid tree given a type instance.") {
         assertTreeLengths(typesTree)
+      }
+    }
+
+    describe("mapToValueTree") {
+      it("converts a Tree[ClassSymbol] to a Tree[Any]") {
+        val valuesTree = Instantiator.mapToValuesTree(typesTree)
+
+        assert(valuesTree.isInstanceOf[Tree[Any]])
+      }
+
+      it("retruns a Leaf[Any] containing an Int given a Leaf[Int]") {
+        val typeLeaf = Leaf(typeOf[Int].typeSymbol.asClass)
+        val intLeaf = Instantiator.mapToValuesTree(typeLeaf)
+
+        intLeaf match {
+          case Leaf(value) => value shouldBe a [java.lang.Integer]
+          case _ =>
+        }
+      }
+
+      it("retruns a Leaf[Any] containing an String given a Leaf[String]") {
+        val typeLeaf = Leaf(typeOf[String].typeSymbol.asClass)
+        val str = Instantiator.mapToValuesTree(typeLeaf)
+
+        str match {
+          case Leaf(value) => value shouldBe a [String]
+          case _ =>
+        }
       }
     }
   }
