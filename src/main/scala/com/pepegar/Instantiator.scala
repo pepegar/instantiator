@@ -47,6 +47,7 @@ object Instantiator {
     s.toString match {
       case "class Int" => Random.nextInt
       case "class String" => Random.alphanumeric.take(10).toList.mkString("")
+      case "class Float" => Random.nextFloat
       case _ =>
     }
   }

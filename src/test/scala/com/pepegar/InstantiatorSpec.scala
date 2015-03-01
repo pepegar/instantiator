@@ -28,24 +28,26 @@ class InstantiatorSpec extends FunSpec with Matchers {
       }
 
       it("retruns a Leaf[Any] containing an Int given a Leaf[Int]") {
-        val typeLeaf = Leaf(typeOf[Int].typeSymbol.asClass)
-        val intLeaf = Instantiator.mapToValuesTree(typeLeaf)
-
-        intLeaf match {
-          case Leaf(value) => value shouldBe a [java.lang.Integer]
-          case _ =>
-        }
+        assertLeafType[Int, java.lang.Integer]
       }
 
       it("retruns a Leaf[Any] containing an String given a Leaf[String]") {
-        val typeLeaf = Leaf(typeOf[String].typeSymbol.asClass)
-        val str = Instantiator.mapToValuesTree(typeLeaf)
-
-        str match {
-          case Leaf(value) => value shouldBe a [String]
-          case _ =>
-        }
+        assertLeafType[String, String]
       }
+
+      it("retruns a Leaf[Any] containing an Float given a Leaf[Float]") {
+        assertLeafType[Float, java.lang.Float]
+      }
+    }
+  }
+
+  def assertLeafType[T, U](implicit tagT: TypeTag[T], tagU: Manifest[U]) = {
+    val typeLeaf = Leaf(typeOf[T].typeSymbol.asClass)
+    val str = Instantiator.mapToValuesTree(typeLeaf)
+
+    str match {
+      case Leaf(value) => value shouldBe a [U]
+      case _ =>
     }
   }
 
