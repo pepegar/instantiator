@@ -27,16 +27,54 @@ class InstantiatorSpec extends FunSpec with Matchers {
         assert(valuesTree.isInstanceOf[Tree[Any]])
       }
 
-      it("retruns a Leaf[Any] containing an Int given a Leaf[Int]") {
+      it("returns a Leaf[Any] containing an Int given a Leaf[Int]") {
         assertLeafType[Int, java.lang.Integer]
       }
 
-      it("retruns a Leaf[Any] containing an String given a Leaf[String]") {
+      it("returns a Leaf[Any] containing an String given a Leaf[String]") {
         assertLeafType[String, String]
       }
 
-      it("retruns a Leaf[Any] containing an Float given a Leaf[Float]") {
+      it("returns a Leaf[Any] containing an Float given a Leaf[Float]") {
         assertLeafType[Float, java.lang.Float]
+      }
+
+      it("works with Branches containing only Leaves") {
+        val typeBranch = Branch(
+                           List(
+                             Leaf(typeOf[Int].typeSymbol.asClass),
+                             Leaf(typeOf[String].typeSymbol.asClass)))
+
+        val valueBranch = Instantiator.mapToValuesTree(typeBranch)
+
+        valueBranch match {
+          case Branch(ch) => ch.foreach {
+            case Leaf(v) => assert(v.isInstanceOf[String] || v.isInstanceOf[Int])
+            case _ => assert(false)
+          }
+        }
+      }
+
+      it("works with Branches containing both Branches and Leaves") {
+        val typeBranch = Branch(
+                           List(
+                             Leaf(typeOf[Int].typeSymbol.asClass),
+                             Branch(
+                               List(
+                                 Leaf(typeOf[Int].typeSymbol.asClass),
+                                 Leaf(typeOf[String].typeSymbol.asClass)))))
+
+        val valuesBranch = Instantiator.mapToValuesTree(typeBranch)
+
+        valuesBranch match {
+          case Branch(children) => children foreach {
+            case Leaf(value) => value shouldBe a [java.lang.Integer]
+            case Branch(ch) => ch foreach {
+              case Leaf(v) => assert(v.isInstanceOf[java.lang.Integer] || v.isInstanceOf[String])
+              case _ =>
+            }
+          }
+        }
       }
     }
   }

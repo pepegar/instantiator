@@ -44,10 +44,10 @@ object Instantiator {
   }
 
   def symbolToValue(s: ClassSymbol): Any = {
-    s.toString match {
-      case "class Int" => Random.nextInt
-      case "class String" => Random.alphanumeric.take(10).toList.mkString("")
-      case "class Float" => Random.nextFloat
+    s match {
+      case s if s.toString == "class Int" => Random.nextInt
+      case s if s.toString == "class String" => Random.alphanumeric.take(10).toList.mkString("")
+      case s if s.toString == "class Float" => Random.nextFloat
       case _ =>
     }
   }
