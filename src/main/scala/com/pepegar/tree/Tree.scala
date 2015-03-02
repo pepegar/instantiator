@@ -1,11 +1,11 @@
 package com.pepegar.tree
 
 abstract class Tree[T] {
-  def map[U](fn: T => U): Tree[U]
+  def scan[U](fn: T => U): Tree[U]
 }
 
 case class Branch[T](children: List[Tree[T]]) extends Tree[T] {
-  def map[U](f: T => U): Tree[U] = {
+  def scan[U](f: T => U): Tree[U] = {
     def treeToTree(tree: Tree[T], fn: T => U): Tree[U] = {
       tree match {
         case Leaf(v) => Leaf(fn(v))
@@ -28,7 +28,7 @@ case class Branch[T](children: List[Tree[T]]) extends Tree[T] {
 }
 
 case class Leaf[T](value: T) extends Tree[T] {
-  def map[U](fn: T => U): Tree[U] = {
+  def scan[U](fn: T => U): Tree[U] = {
     Leaf(fn(value))
   }
 }

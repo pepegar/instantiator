@@ -40,7 +40,7 @@ object Instantiator {
   }
 
   def mapToValuesTree(typesTree: Tree[ClassSymbol]): Tree[Any] = {
-    typesTree.map(symbolToValue)
+    typesTree.scan(symbolToValue)
   }
 
   def symbolToValue(s: ClassSymbol): Any = {
