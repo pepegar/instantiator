@@ -1,6 +1,6 @@
 package com.pepegar
 
-import com.pepegar.tree.{Branch, Tree, Leaf}
+import com.pepegar.instantiator.tree.{Branch, Tree, Leaf}
 import org.scalatest._
 import scala.reflect.runtime.universe._
 

@@ -1,4 +1,4 @@
-package com.pepegar.tree
+package com.pepegar.instantiator.tree
 
 import org.scalatest._
 
