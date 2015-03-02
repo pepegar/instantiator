@@ -39,6 +39,30 @@ class InstantiatorSpec extends FunSpec with Matchers {
         assertLeafType[Float, java.lang.Float]
       }
 
+      it("returns Leaf[Any] containing a Boolean given a Leaf[Boolean]") {
+        assertLeafType[Boolean, java.lang.Boolean]
+      }
+
+      it("returns Leaf[Any] containing a Byte given a Leaf[Byte]") {
+        assertLeafType[Byte, java.lang.Byte]
+      }
+
+      it("returns Leaf[Any] containing a Short given a Leaf[Short]") {
+        assertLeafType[Short, java.lang.Short]
+      }
+
+      it("returns Leaf[Any] containing a Char given a Leaf[Char]") {
+        assertLeafType[Char, java.lang.Character]
+      }
+
+      it("returns Leaf[Any] containing a Long given a Leaf[Long]") {
+        assertLeafType[Long, java.lang.Long]
+      }
+
+      it("returns Leaf[Any] containing a Double given a Leaf[Double]") {
+        assertLeafType[Double, java.lang.Double]
+      }
+
       it("works with Branches containing only Leaves") {
         val typeBranch = Branch(
                            List(

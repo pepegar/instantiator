@@ -48,6 +48,12 @@ object Instantiator {
       case s if s.toString == "class Int" => Random.nextInt
       case s if s.toString == "class String" => Random.alphanumeric.take(10).toList.mkString("")
       case s if s.toString == "class Float" => Random.nextFloat
+      case s if s.toString == "class Boolean" => Random.nextBoolean
+      case s if s.toString == "class Byte" => Random.nextInt.toByte
+      case s if s.toString == "class Short" => Random.nextInt(Short.MaxValue).toShort
+      case s if s.toString == "class Char" => Random.alphanumeric.take(1)(0)
+      case s if s.toString == "class Long" => Random.nextLong
+      case s if s.toString == "class Double" => Random.nextDouble
       case _ =>
     }
   }
