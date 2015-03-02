@@ -2,8 +2,26 @@ package com.pepegar.instantiator.tree
 
 import org.scalatest._
 
-class TreeSpec extends FunSpec {
+class TreeSpec extends FunSpec with Matchers {
   def intToString(i: Int): String = i.toString
+
+  describe("Tree") {
+    describe("scan") {
+      it("correctly chooses between Branch or Leaf implementation") {
+        val tLeaf: Tree[Int] = Leaf(1)
+        val tBranch: Tree[String] = Branch(List(Leaf("asdf")))
+
+        tLeaf scan { s =>
+          s shouldBe a [java.lang.Integer]
+        }
+
+        tBranch scan { s =>
+          s shouldBe a [java.lang.String]
+        }
+      }
+    }
+  }
+
   describe("Branch") {
     describe("scan") {
       it("converts a Branch[T] to Branch[V]") {
