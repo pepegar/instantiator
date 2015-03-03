@@ -35,8 +35,8 @@ object Instantiator {
     val classProperties = tpe.members.filter(!_.isMethod)
 
     classProperties.isEmpty match {
-      case true => Leaf(symbol.asClass)
-      case false => Branch(classProperties.map(s => generateTypesTree(s.typeSignature)).toList)
+      case true => Leaf(Some(symbol.name), symbol.asClass)
+      case false => Branch(Some(symbol.name), classProperties.map(s => generateTypesTree(s.typeSignature)).toList)
     }
   }
 

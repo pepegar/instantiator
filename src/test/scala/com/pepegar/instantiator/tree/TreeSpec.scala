@@ -8,8 +8,8 @@ class TreeSpec extends FunSpec with Matchers {
   describe("Tree") {
     describe("scan") {
       it("correctly chooses between Branch or Leaf implementation") {
-        val tLeaf: Tree[Int] = Leaf(1)
-        val tBranch: Tree[String] = Branch(List(Leaf("asdf")))
+        val tLeaf: Tree[Int] = Leaf(None, 1)
+        val tBranch: Tree[String] = Branch(None, List(Leaf(None, "asdf")))
 
         tLeaf scan { s =>
           s shouldBe a [java.lang.Integer]
@@ -25,12 +25,12 @@ class TreeSpec extends FunSpec with Matchers {
   describe("Branch") {
     describe("scan") {
       it("converts a Branch[T] to Branch[V]") {
-        val integerBranch = Branch(List(Leaf(1), Leaf(2), Leaf(3), Leaf(4)))
+        val integerBranch = Branch(None, List(Leaf(None, 1), Leaf(None, 2), Leaf(None, 3), Leaf(None, 4)))
         val stringBranch = integerBranch.scan(intToString)
 
         stringBranch match {
-          case Branch(children) => children.foreach {
-            case Leaf(v) => assert(v.isInstanceOf[String])
+          case Branch(_, children) => children.foreach {
+            case Leaf(_, v) => assert(v.isInstanceOf[String])
             case _ =>
           }
           case _ =>
@@ -42,11 +42,11 @@ class TreeSpec extends FunSpec with Matchers {
   describe("Leaf") {
     describe("scan") {
       it("should convert a Leaf[T] to a Leaf[V]") {
-        val leafOfInt = Leaf(1)
+        val leafOfInt = Leaf(None, 1)
         val leafOfString = leafOfInt.scan(intToString)
 
         leafOfString match {
-          case Leaf(v) => assert(v.isInstanceOf[String])
+          case Leaf(_, v) => assert(v.isInstanceOf[String])
           case _ =>
         }
       }
