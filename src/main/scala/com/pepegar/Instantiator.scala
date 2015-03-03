@@ -1,9 +1,7 @@
 package com.pepegar
 
-import com.pepegar.instantiator.tree._
-import com.pepegar.instantiator.types
-import scala.reflect.runtime.universe.{typeOf, Type, ClassSymbol, TypeTag}
-import util.Random
+import com.pepegar.instantiator.utils.{TypesTreeMaker, TypesToValuesMapper}
+import scala.reflect.runtime.universe.{typeOf, TypeTag}
 
 /** Instantiator object is the main object and entry point to the library.
  *
@@ -12,7 +10,7 @@ import util.Random
  *
  * @author pepegar
  */
-object Instantiator {
+object Instantiator extends TypesTreeMaker with TypesToValuesMapper {
 
   /** Nothing to see here yet
    *
@@ -21,41 +19,5 @@ object Instantiator {
   def createInstance[T](implicit tag: TypeTag[T]) = {
     val t = typeOf[T]
     generateTypesTree(t)
-  }
-
-  /** This method generates the type tree of properties of the given type
-   *
-   * The purpose of it is creating a Tree that will be parsed later in the moment of generating the
-   * instance of the class.
-   *
-   * @author pepegar
-   * */
-  def generateTypesTree(tpe: Type): Tree[ClassSymbol] = {
-    val symbol = tpe.typeSymbol
-    val classProperties = tpe.members.filter(!_.isMethod)
-
-    classProperties.isEmpty match {
-      case true => Leaf(Some(symbol.name), symbol.asClass)
-      case false => Branch(Some(symbol.name), classProperties.map(s => generateTypesTree(s.typeSignature)).toList)
-    }
-  }
-
-  def mapToValuesTree(typesTree: Tree[ClassSymbol]): Tree[Any] = {
-    typesTree.scan(symbolToValue)
-  }
-
-  def symbolToValue(s: ClassSymbol): Any = {
-    s.toString match {
-      case types.INT => Random.nextInt
-      case types.STRING => Random.alphanumeric.take(10).toList.mkString("")
-      case types.FLOAT => Random.nextFloat
-      case types.BOOLEAN => Random.nextBoolean
-      case types.BYTE => Random.nextInt.toByte
-      case types.SHORT => Random.nextInt(Short.MaxValue).toShort
-      case types.CHAR => Random.alphanumeric.take(1)(0)
-      case types.LONG => Random.nextLong
-      case types.DOUBLE => Random.nextDouble
-      case _ =>
-    }
   }
 }
