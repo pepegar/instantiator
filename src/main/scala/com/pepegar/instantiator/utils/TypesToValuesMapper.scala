@@ -5,11 +5,34 @@ import com.pepegar.instantiator.types
 import scala.reflect.runtime.universe.{typeOf, Type, ClassSymbol, TypeTag}
 import util.Random
 
+/** TypesToValuesMapper trait
+ *
+ * this trait contains the methods and implementation for all the things
+ * relative to mapping a types tree to a values tree.
+ *
+ * @author pepegar
+ */
 trait TypesToValuesMapper {
+
+  /** mapToValuesTree method
+   *
+   * this method takes a Tree[ClassSymbol] AKA a tree of type definitions
+   * and maps it to a tree of values, being the values random generated values
+   * of that types.
+   *
+   * @author pepegar
+   */
   def mapToValuesTree(typesTree: Tree[ClassSymbol]): Tree[Any] = {
     typesTree.scan(symbolToValue)
   }
 
+  /** symbolToValue method
+   *
+   * this method takes a class symbol and returns a valid value for the given
+   * class.
+   *
+   * @author pepegar
+   */
   def symbolToValue(s: ClassSymbol): Any = {
     s.toString match {
       case types.INT => Random.nextInt
