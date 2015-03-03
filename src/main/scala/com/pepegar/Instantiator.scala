@@ -1,10 +1,9 @@
 package com.pepegar
 
-import scala.reflect.runtime.universe._
-
-sealed abstract class Tree
-case class Branch[T](owner: T, properties: List[Tree]) extends Tree
-case class Leaf[T](value: T) extends Tree
+import com.pepegar.instantiator.tree._
+import com.pepegar.instantiator.types
+import scala.reflect.runtime.universe.{typeOf, Type, ClassSymbol, TypeTag}
+import util.Random
 
 /** Instantiator object is the main object and entry point to the library.
  *
@@ -31,13 +30,32 @@ object Instantiator {
    *
    * @author pepegar
    * */
-  def generateTypesTree(tpe: Type): Tree = {
+  def generateTypesTree(tpe: Type): Tree[ClassSymbol] = {
     val symbol = tpe.typeSymbol
     val classProperties = tpe.members.filter(!_.isMethod)
 
     classProperties.isEmpty match {
-      case true => Leaf(symbol.name)
-      case false => Branch(symbol.name, classProperties.map(s => generateTypesTree(s.typeSignature)).toList)
+      case true => Leaf(symbol.asClass)
+      case false => Branch(classProperties.map(s => generateTypesTree(s.typeSignature)).toList)
+    }
+  }
+
+  def mapToValuesTree(typesTree: Tree[ClassSymbol]): Tree[Any] = {
+    typesTree.scan(symbolToValue)
+  }
+
+  def symbolToValue(s: ClassSymbol): Any = {
+    s.toString match {
+      case types.INT => Random.nextInt
+      case types.STRING => Random.alphanumeric.take(10).toList.mkString("")
+      case types.FLOAT => Random.nextFloat
+      case types.BOOLEAN => Random.nextBoolean
+      case types.BYTE => Random.nextInt.toByte
+      case types.SHORT => Random.nextInt(Short.MaxValue).toShort
+      case types.CHAR => Random.alphanumeric.take(1)(0)
+      case types.LONG => Random.nextLong
+      case types.DOUBLE => Random.nextDouble
+      case _ =>
     }
   }
 }
