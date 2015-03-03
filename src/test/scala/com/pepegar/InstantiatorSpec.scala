@@ -65,15 +65,16 @@ class InstantiatorSpec extends FunSpec with Matchers {
 
       it("works with Branches containing only Leaves") {
         val typeBranch = Branch(
+                           None,
                            List(
-                             Leaf(typeOf[Int].typeSymbol.asClass),
-                             Leaf(typeOf[String].typeSymbol.asClass)))
+                             Leaf(None, typeOf[Int].typeSymbol.asClass),
+                             Leaf(None, typeOf[String].typeSymbol.asClass)))
 
         val valueBranch = Instantiator.mapToValuesTree(typeBranch)
 
         valueBranch match {
-          case Branch(ch) => ch.foreach {
-            case Leaf(v) => assert(v.isInstanceOf[String] || v.isInstanceOf[Int])
+          case Branch(_, ch) => ch.foreach {
+            case Leaf(_, v) => assert(v.isInstanceOf[String] || v.isInstanceOf[Int])
             case _ => assert(false)
           }
         }
@@ -81,20 +82,22 @@ class InstantiatorSpec extends FunSpec with Matchers {
 
       it("works with Branches containing both Branches and Leaves") {
         val typeBranch = Branch(
+                           None,
                            List(
-                             Leaf(typeOf[Int].typeSymbol.asClass),
+                             Leaf(None, typeOf[Int].typeSymbol.asClass),
                              Branch(
+                               None,
                                List(
-                                 Leaf(typeOf[Int].typeSymbol.asClass),
-                                 Leaf(typeOf[String].typeSymbol.asClass)))))
+                                 Leaf(None, typeOf[Int].typeSymbol.asClass),
+                                 Leaf(None, typeOf[String].typeSymbol.asClass)))))
 
         val valuesBranch = Instantiator.mapToValuesTree(typeBranch)
 
         valuesBranch match {
-          case Branch(children) => children foreach {
-            case Leaf(value) => value shouldBe a [java.lang.Integer]
-            case Branch(ch) => ch foreach {
-              case Leaf(v) => assert(v.isInstanceOf[java.lang.Integer] || v.isInstanceOf[String])
+          case Branch(_, children) => children foreach {
+            case Leaf(_, value) => value shouldBe a [java.lang.Integer]
+            case Branch(_, ch) => ch foreach {
+              case Leaf(_, v) => assert(v.isInstanceOf[java.lang.Integer] || v.isInstanceOf[String])
               case _ =>
             }
           }
@@ -104,28 +107,28 @@ class InstantiatorSpec extends FunSpec with Matchers {
   }
 
   def assertLeafType[T, U](implicit tagT: TypeTag[T], tagU: Manifest[U]) = {
-    val typeLeaf = Leaf(typeOf[T].typeSymbol.asClass)
+    val typeLeaf = Leaf(None, typeOf[T].typeSymbol.asClass)
     val str = Instantiator.mapToValuesTree(typeLeaf)
 
     str match {
-      case Leaf(value) => value shouldBe a [U]
+      case Leaf(_, value) => value shouldBe a [U]
       case _ =>
     }
   }
 
   def assertTreeLengths[T](typesTree: Tree[T]): Unit = typesTree match {
     // this branch should represent the A type
-    case Branch(c1) => {
+    case Branch(_, c1) => {
       assert(c1.length === 2)
 
       c1.foreach {
         // this branch should represent the B & C types
-        case Branch(c2) => {
+        case Branch(_, c2) => {
           assert(c2.length === 1)
 
           c2.foreach {
             // this branch should represent the D type
-            case Branch(c3) => assert(c3.length === 2)
+            case Branch(_, c3) => assert(c3.length === 2)
             case _ =>
           }
         }
