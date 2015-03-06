@@ -26,8 +26,8 @@ trait TypesTreeMaker {
     val classProperties = tpe.members.filter(!_.isMethod)
 
     classProperties.isEmpty match {
-      case true => Leaf(Some(symbol.name), symbol.asClass)
-      case false => Branch(Some(symbol.name), classProperties.map(s => generateTypesTree(s.typeSignature)).toList)
+      case true => Leaf(Some(symbol.fullName), symbol.asClass)
+      case false => Branch(Some(symbol.fullName), classProperties.map(s => generateTypesTree(s.typeSignature)).toList)
     }
   }
 }

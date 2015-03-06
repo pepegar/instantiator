@@ -4,7 +4,7 @@ import org.scalatest._
 import scala.reflect.runtime.universe._
 import com.pepegar.instantiator.tree.{Branch, Tree, Leaf}
 
-class TypesTreeMakerSpec extends FunSpec with Matchers {
+class TypesTreeMakerSpec extends FunSpec {
   describe("generateTypesTree") {
     it("should create a valid tree given a type instance.") {
       new {} with TypesTreeMaker {
