@@ -4,6 +4,10 @@ import com.pepegar.instantiator.tree._
 
 trait ValueTreeParser {
 
+  /** instantiate takes a tree of values and returns an object of that type
+   *
+   * @author pepegar
+   */
   def instantiate(valueTree: Tree[Any]): Any = {
     valueTree match {
       case Leaf(_, value) => value
@@ -23,6 +27,14 @@ trait ValueTreeParser {
     }
   }
 
+  /** converts a list of trees (both leaves and branches) to an array
+   * of objects of them.
+   *
+   * This is a convenience method needed to interop with Java reflection
+   * machinery
+   *
+   * @author pepegar
+   */
   def convertToArgArray(tree: List[Tree[Any]]): Array[Object] = {
     tree.map { elem =>
       elem match {
@@ -32,6 +44,10 @@ trait ValueTreeParser {
     }.toArray
   }
 
+  /** castToPrimitive unboxes objects to its primitive representations
+   *
+   * @author pepegar
+   */
   def castToPrimitive(value: Any) = {
     value match {
       case v: java.lang.Integer => v.asInstanceOf[java.lang.Integer]
