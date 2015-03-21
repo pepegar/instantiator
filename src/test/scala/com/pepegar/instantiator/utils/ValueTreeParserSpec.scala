@@ -20,7 +20,12 @@ class ValueTreeParserSpec extends FunSpec with Matchers {
       }
 
       it("works with branches containing only one leaf") {
-        val branch = instantiate(Branch(Some("com.pepegar.instantiator.utils.ClassWithTwoIntParam"), List(Leaf(None, 4))))
+        val branch = instantiate(
+          Branch(
+            Some("com.pepegar.instantiator.utils.ClassWithTwoIntParam"),
+            List(
+              Leaf(None, 4),
+              Leaf(None, 5))))
 
         branch shouldBe a [ClassWithTwoIntParam]
       }
