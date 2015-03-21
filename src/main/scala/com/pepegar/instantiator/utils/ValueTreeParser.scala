@@ -37,7 +37,6 @@ trait ValueTreeParser {
       case v: java.lang.Boolean => v.asInstanceOf[java.lang.Boolean]
       case v: java.lang.Byte => v.asInstanceOf[java.lang.Byte]
       case v: java.lang.Short => v.asInstanceOf[java.lang.Short]
-      case v: java.lang.Char => v.asInstanceOf[java.lang.Char]
       case v: java.lang.Long => v.asInstanceOf[java.lang.Long]
       case v: java.lang.Double => v.asInstanceOf[java.lang.Double]
     }
