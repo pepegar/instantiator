@@ -24,8 +24,11 @@ trait ValueTreeParser {
   }
 
   def convertToArgArray(tree: List[Tree[Any]]): Array[Object] = {
-    tree.map {
-      case Leaf(_, value) => castToPrimitive(value)
+    tree.map { elem =>
+      elem match {
+        case Leaf(_, value) => castToPrimitive(value)
+        case Branch(_, _) => instantiate(elem).asInstanceOf[AnyRef]
+      }
     }.toArray
   }
 
