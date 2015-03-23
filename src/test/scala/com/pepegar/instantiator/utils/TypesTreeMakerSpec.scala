@@ -4,13 +4,29 @@ import org.scalatest._
 import scala.reflect.runtime.universe._
 import com.pepegar.instantiator.tree.{Branch, Tree, Leaf}
 
-class TypesTreeMakerSpec extends FunSpec {
+class TypesTreeMakerSpec extends FunSpec with Matchers {
   describe("generateTypesTree") {
     it("should create a valid tree given a type instance.") {
       new {} with TypesTreeMaker {
         val t = typeOf[A]
         val typesTree = generateTypesTree(t)
         assertTreeLengths(typesTree)
+      }
+    }
+
+    it("works with primitive types") {
+      new {} with TypesTreeMaker with TypesToValuesMapper with ValueTreeParser {
+        val string = typeOf[String]
+        val stringTypesTree = generateTypesTree(string)
+        stringTypesTree shouldBe a [Leaf[_]]
+
+        val int = typeOf[Int]
+        val intTypesTree = generateTypesTree(int)
+        intTypesTree shouldBe a [Leaf[_]]
+
+        val float = typeOf[Float]
+        val floatTypesTree = generateTypesTree(float)
+        floatTypesTree shouldBe a [Leaf[_]]
       }
     }
   }

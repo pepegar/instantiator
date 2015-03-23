@@ -24,8 +24,12 @@ trait TypesTreeMaker {
   def generateTypesTree(tpe: Type): Tree[ClassSymbol] = {
     val symbol = tpe.typeSymbol
     val classProperties = tpe.members.filter(!_.isMethod)
+    // HACK: this is the ugliest shit ever... i'm not proud of it.
+    //       I need to find a way to get if the type has literal representation
+    //       in the language.
+    val shouldLeaf = classProperties.isEmpty || symbol.fullName == "java.lang.String"
 
-    classProperties.isEmpty match {
+    shouldLeaf match {
       case true => Leaf(Some(symbol.fullName), symbol.asClass)
       case false => Branch(Some(symbol.fullName), classProperties.map(s => generateTypesTree(s.typeSignature)).toList)
     }
