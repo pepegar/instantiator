@@ -30,7 +30,7 @@ trait ValueTreeParser {
   def getInstanceForLeaf(typeData: Option[Any], value: Any): Any = {
     value match {
       case () => Class.forName(typeData.get.toString).getConstructors()(0).newInstance()
-      case v => v
+      case v => castToPrimitive(typeData, v)
     }
   }
 
@@ -45,7 +45,7 @@ trait ValueTreeParser {
   def convertToArgArray(list: List[Tree[Any]]): Array[Object] = {
     list.map { elem =>
       elem match {
-        case Leaf(_, value) => castToPrimitive(value)
+        case Leaf(typeData, value) => castToPrimitive(typeData, value)
         case Branch(_, _) => instantiate(elem).asInstanceOf[AnyRef]
       }
     }.toArray
@@ -55,7 +55,7 @@ trait ValueTreeParser {
    *
    * @author pepegar
    */
-  def castToPrimitive(value: Any) = {
+  def castToPrimitive(typeData: Option[Any], value: Any) = {
     value match {
       case v: java.lang.Integer => v.asInstanceOf[java.lang.Integer]
       case v: java.lang.Float => v.asInstanceOf[java.lang.Float]
@@ -65,6 +65,7 @@ trait ValueTreeParser {
       case v: java.lang.Short => v.asInstanceOf[java.lang.Short]
       case v: java.lang.Long => v.asInstanceOf[java.lang.Long]
       case v: java.lang.Double => v.asInstanceOf[java.lang.Double]
+      case _ => getInstanceForLeaf(typeData, value).asInstanceOf[AnyRef]
     }
   }
 }

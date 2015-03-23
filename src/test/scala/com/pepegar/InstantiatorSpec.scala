@@ -9,6 +9,10 @@ case class StringAndInt(a: String, b: Int)
 case class IntAndString(a: Int, b: String)
 case class TwoIntsTwoFloats(a: TwoInts, b: TwoFloats)
 case class A()
+case class B()
+case class C()
+case class OtherClass(a:A, b: B, c: C)
+case class HellOnEarth( a: Int, b: String, c: Double, d: OtherClass, e: A, f: B, g: C, h: Int, i: String, j: Double, k: OtherClass, l: A, m: B, n: C, o: Int, p: String, q: Double, s: OtherClass, t: A, u: B, v: C, w: Int, x: String, y: Double, z: OtherClass)
 
 class InstantiatorSpec extends FunSpec with Matchers {
   describe("createInstance") {
@@ -56,6 +60,11 @@ class InstantiatorSpec extends FunSpec with Matchers {
     it("instantiates classes without parameters") {
       val maybeA = Instantiator.createInstance[A]
       maybeA shouldBe a [A]
+    }
+
+    it("instantiates BEHEMOTH classes") {
+      val maybeHellOnEarth = Instantiator.createInstance[HellOnEarth]
+      maybeHellOnEarth shouldBe a [HellOnEarth]
     }
   }
 }
