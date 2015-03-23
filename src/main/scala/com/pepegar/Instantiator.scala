@@ -1,6 +1,6 @@
 package com.pepegar
 
-import com.pepegar.instantiator.utils.{TypesTreeMaker, TypesToValuesMapper}
+import com.pepegar.instantiator.utils.{TypesTreeMaker, TypesToValuesMapper, ValueTreeParser}
 import scala.reflect.runtime.universe.{typeOf, TypeTag}
 
 /** Instantiator object is the main object and entry point to the library.
@@ -10,7 +10,10 @@ import scala.reflect.runtime.universe.{typeOf, TypeTag}
  *
  * @author pepegar
  */
-object Instantiator extends TypesTreeMaker with TypesToValuesMapper {
+object Instantiator
+  extends TypesTreeMaker
+  with TypesToValuesMapper
+  with ValueTreeParser {
 
   /** Nothing to see here yet
    *
@@ -18,6 +21,9 @@ object Instantiator extends TypesTreeMaker with TypesToValuesMapper {
    */
   def createInstance[T](implicit tag: TypeTag[T]) = {
     val t = typeOf[T]
-    generateTypesTree(t)
+    val typesTree = generateTypesTree(t)
+    val valuesTree = mapToValuesTree(typesTree)
+
+    instantiate(valuesTree)
   }
 }
