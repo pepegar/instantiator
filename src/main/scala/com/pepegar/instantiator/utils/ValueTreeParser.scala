@@ -10,7 +10,7 @@ trait ValueTreeParser {
    */
   def instantiate(valueTree: Tree[Any]): Any = {
     valueTree match {
-      case Leaf(_, value) => value
+      case Leaf(typeData, value) => getInstanceForLeaf(typeData, value)
       case Branch(typeData, children) => {
         typeData match {
           case None => None
@@ -24,6 +24,13 @@ trait ValueTreeParser {
           }
         }
       }
+    }
+  }
+
+  def getInstanceForLeaf(typeData: Option[Any], value: Any): Any = {
+    value match {
+      case () => Class.forName(typeData.get.toString).getConstructors()(0).newInstance()
+      case v => v
     }
   }
 

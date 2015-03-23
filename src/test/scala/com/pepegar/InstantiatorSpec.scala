@@ -8,6 +8,7 @@ case class TwoStrings(a: String, b: String)
 case class StringAndInt(a: String, b: Int)
 case class IntAndString(a: Int, b: String)
 case class TwoIntsTwoFloats(a: TwoInts, b: TwoFloats)
+case class A()
 
 class InstantiatorSpec extends FunSpec with Matchers {
   describe("createInstance") {
@@ -50,6 +51,11 @@ class InstantiatorSpec extends FunSpec with Matchers {
     it("instantiates classes whose params are not only primitives but also other classes ") {
       val maybeTwoIntsTwoFloats = Instantiator.createInstance[TwoIntsTwoFloats]
       maybeTwoIntsTwoFloats shouldBe a [TwoIntsTwoFloats]
+    }
+
+    it("instantiates classes without parameters") {
+      val maybeA = Instantiator.createInstance[A]
+      maybeA shouldBe a [A]
     }
   }
 }
