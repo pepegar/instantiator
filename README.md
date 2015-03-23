@@ -98,3 +98,12 @@ questions:
   would be a ```List[Int]```, or a ```List[Number]```...  Noooope.
   - I don't know any element of the parametric data type BECAUSE IS MY JOB TO
   GENERATE IT...
+
+Acknowledgements
+----------------
+I started this project while at [h4ckademy](http://www.h4ckademy.com), the best
+educational experience in my life.
+
+License
+-------
+see [LICENSE](https://github.com/pepegar/instantiator/blob/master/LICENSE)
