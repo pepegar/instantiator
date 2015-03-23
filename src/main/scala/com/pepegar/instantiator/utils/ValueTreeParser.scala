@@ -14,7 +14,7 @@ trait ValueTreeParser {
       case Branch(typeData, children) => {
         typeData match {
           case None => None
-          case Some(s) =>{
+          case Some(s) => {
             val args = convertToArgArray(children)
 
             Class
@@ -35,8 +35,8 @@ trait ValueTreeParser {
    *
    * @author pepegar
    */
-  def convertToArgArray(tree: List[Tree[Any]]): Array[Object] = {
-    tree.map { elem =>
+  def convertToArgArray(list: List[Tree[Any]]): Array[Object] = {
+    list.map { elem =>
       elem match {
         case Leaf(_, value) => castToPrimitive(value)
         case Branch(_, _) => instantiate(elem).asInstanceOf[AnyRef]

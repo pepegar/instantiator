@@ -8,13 +8,13 @@ case class Branch[T](metadata: Option[Any], children: List[Tree[T]]) extends Tre
   def lift[U](f: T => U): Tree[U] = {
     def treeToTree(tree: Tree[T], fn: T => U): Tree[U] = {
       tree match {
-        case Leaf(_, v) => Leaf(None, fn(v))
-        case Branch(_, ch) => {
+        case Leaf(m, v) => Leaf(m, fn(v))
+        case Branch(m, ch) => {
           val newProps = ch.map { t =>
             treeToTree(t, f)
           }
 
-          Branch(metadata, newProps)
+          Branch(m, newProps)
         }
       }
     }
