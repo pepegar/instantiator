@@ -23,7 +23,7 @@ trait TypesToValuesMapper {
    * @author pepegar
    */
   def mapToValuesTree(typesTree: Tree[ClassSymbol]): Tree[Any] = {
-    typesTree.scan(symbolToValue)
+    typesTree.lift(symbolToValue)
   }
 
   /** symbolToValue method
