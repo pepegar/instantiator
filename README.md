@@ -53,3 +53,8 @@ How it works?
 -------------
 Instantiator uses the Scala reflection API to inspect the types of the properties and then generates
 random data for them based on their types.
+
+Restrictions
+------------
+Right now, ```Instantiator``` will use the first constructor it will found, so
+it's better not to try to instantiat classes with more than one constructor.

@@ -1,20 +1,20 @@
 package com.pepegar.instantiator.tree
 
-abstract class Tree[T] {
-  def scan[U](fn: T => U): Tree[U]
+abstract class Tree[T](metadata: Option[Any]) {
+  def lift[U](fn: T => U): Tree[U]
 }
 
-case class Branch[T](children: List[Tree[T]]) extends Tree[T] {
-  def scan[U](f: T => U): Tree[U] = {
+case class Branch[T](metadata: Option[Any], children: List[Tree[T]]) extends Tree[T](metadata) {
+  def lift[U](f: T => U): Tree[U] = {
     def treeToTree(tree: Tree[T], fn: T => U): Tree[U] = {
       tree match {
-        case Leaf(v) => Leaf(fn(v))
-        case Branch(ch) => {
+        case Leaf(m, v) => Leaf(m, fn(v))
+        case Branch(m, ch) => {
           val newProps = ch.map { t =>
             treeToTree(t, f)
           }
 
-          Branch(newProps)
+          Branch(m, newProps)
         }
       }
     }
@@ -23,12 +23,12 @@ case class Branch[T](children: List[Tree[T]]) extends Tree[T] {
       treeToTree(tree, f)
     }
 
-    Branch(newProperties)
+    Branch(metadata, newProperties)
   }
 }
 
-case class Leaf[T](value: T) extends Tree[T] {
-  def scan[U](fn: T => U): Tree[U] = {
-    Leaf(fn(value))
+case class Leaf[T](metadata: Option[Any], value: T) extends Tree[T](metadata) {
+  def lift[U](fn: T => U): Tree[U] = {
+    Leaf(metadata, fn(value))
   }
 }

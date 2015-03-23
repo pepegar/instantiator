@@ -1,137 +1,70 @@
 package com.pepegar
 
-import com.pepegar.instantiator.tree.{Branch, Tree, Leaf}
 import org.scalatest._
-import scala.reflect.runtime.universe._
+
+case class TwoInts(a: Int, b: Int)
+case class TwoFloats(a: Float, b: Float)
+case class TwoStrings(a: String, b: String)
+case class StringAndInt(a: String, b: Int)
+case class IntAndString(a: Int, b: String)
+case class TwoIntsTwoFloats(a: TwoInts, b: TwoFloats)
+case class A()
+case class B()
+case class C()
+case class OtherClass(a:A, b: B, c: C)
+case class HellOnEarth( a: Int, b: String, c: Double, d: OtherClass, e: A, f: B, g: C, h: Int, i: String, j: Double, k: OtherClass, l: A, m: B, n: C, o: Int, p: String, q: Double, s: OtherClass, t: A, u: B, v: C, w: Int, x: String, y: Double, z: OtherClass)
 
 class InstantiatorSpec extends FunSpec with Matchers {
-  case class A(b: B, c: C)
-  case class B(d: D)
-  case class C(d: D)
-  case class D(left: Int, right: Float)
+  describe("createInstance") {
+    it("instantiates primitives correctly") {
+      val maybeInt = Instantiator.createInstance[Int]
+      maybeInt shouldBe a [java.lang.Integer]
 
-  describe("Instantiator") {
-    val t = typeOf[A]
-    val typesTree = Instantiator.generateTypesTree(t)
+      val maybeString = Instantiator.createInstance[String]
+      maybeString shouldBe a [java.lang.String]
 
-    describe("generateTypesTree") {
-      it("should create a valid tree given a type instance.") {
-        assertTreeLengths(typesTree)
-      }
+      val maybeFloat = Instantiator.createInstance[Float]
+      maybeFloat shouldBe a [java.lang.Float]
+
+      val maybeByte = Instantiator.createInstance[Byte]
+      maybeByte shouldBe a [java.lang.Byte]
+
+      val maybeBoolean = Instantiator.createInstance[Boolean]
+      maybeBoolean shouldBe a [java.lang.Boolean]
+
+      val maybeShort = Instantiator.createInstance[Short]
+      maybeShort shouldBe a [java.lang.Short]
     }
 
-    describe("mapToValueTree") {
-      it("converts a Tree[ClassSymbol] to a Tree[Any]") {
-        val valuesTree = Instantiator.mapToValuesTree(typesTree)
+    it("instantiates simple classes correctly") {
+      val maybeTwoInts = Instantiator.createInstance[TwoInts]
+      maybeTwoInts shouldBe a [TwoInts]
 
-        assert(valuesTree.isInstanceOf[Tree[Any]])
-      }
+      val maybeTwoFloats = Instantiator.createInstance[TwoFloats]
+      maybeTwoFloats shouldBe a [TwoFloats]
 
-      it("returns a Leaf[Any] containing an Int given a Leaf[Int]") {
-        assertLeafType[Int, java.lang.Integer]
-      }
-
-      it("returns a Leaf[Any] containing an String given a Leaf[String]") {
-        assertLeafType[String, String]
-      }
-
-      it("returns a Leaf[Any] containing an Float given a Leaf[Float]") {
-        assertLeafType[Float, java.lang.Float]
-      }
-
-      it("returns Leaf[Any] containing a Boolean given a Leaf[Boolean]") {
-        assertLeafType[Boolean, java.lang.Boolean]
-      }
-
-      it("returns Leaf[Any] containing a Byte given a Leaf[Byte]") {
-        assertLeafType[Byte, java.lang.Byte]
-      }
-
-      it("returns Leaf[Any] containing a Short given a Leaf[Short]") {
-        assertLeafType[Short, java.lang.Short]
-      }
-
-      it("returns Leaf[Any] containing a Char given a Leaf[Char]") {
-        assertLeafType[Char, java.lang.Character]
-      }
-
-      it("returns Leaf[Any] containing a Long given a Leaf[Long]") {
-        assertLeafType[Long, java.lang.Long]
-      }
-
-      it("returns Leaf[Any] containing a Double given a Leaf[Double]") {
-        assertLeafType[Double, java.lang.Double]
-      }
-
-      it("works with Branches containing only Leaves") {
-        val typeBranch = Branch(
-                           List(
-                             Leaf(typeOf[Int].typeSymbol.asClass),
-                             Leaf(typeOf[String].typeSymbol.asClass)))
-
-        val valueBranch = Instantiator.mapToValuesTree(typeBranch)
-
-        valueBranch match {
-          case Branch(ch) => ch.foreach {
-            case Leaf(v) => assert(v.isInstanceOf[String] || v.isInstanceOf[Int])
-            case _ => assert(false)
-          }
-        }
-      }
-
-      it("works with Branches containing both Branches and Leaves") {
-        val typeBranch = Branch(
-                           List(
-                             Leaf(typeOf[Int].typeSymbol.asClass),
-                             Branch(
-                               List(
-                                 Leaf(typeOf[Int].typeSymbol.asClass),
-                                 Leaf(typeOf[String].typeSymbol.asClass)))))
-
-        val valuesBranch = Instantiator.mapToValuesTree(typeBranch)
-
-        valuesBranch match {
-          case Branch(children) => children foreach {
-            case Leaf(value) => value shouldBe a [java.lang.Integer]
-            case Branch(ch) => ch foreach {
-              case Leaf(v) => assert(v.isInstanceOf[java.lang.Integer] || v.isInstanceOf[String])
-              case _ =>
-            }
-          }
-        }
-      }
+      val maybeTwoStrings = Instantiator.createInstance[TwoStrings]
+      maybeTwoStrings shouldBe a [TwoStrings]
     }
-  }
 
-  def assertLeafType[T, U](implicit tagT: TypeTag[T], tagU: Manifest[U]) = {
-    val typeLeaf = Leaf(typeOf[T].typeSymbol.asClass)
-    val str = Instantiator.mapToValuesTree(typeLeaf)
-
-    str match {
-      case Leaf(value) => value shouldBe a [U]
-      case _ =>
+    it("instantiates classes with different constructor params") {
+      val maybeIntAndString = Instantiator.createInstance[IntAndString]
+      maybeIntAndString shouldBe a [IntAndString]
     }
-  }
 
-  def assertTreeLengths[T](typesTree: Tree[T]): Unit = typesTree match {
-    // this branch should represent the A type
-    case Branch(c1) => {
-      assert(c1.length === 2)
-
-      c1.foreach {
-        // this branch should represent the B & C types
-        case Branch(c2) => {
-          assert(c2.length === 1)
-
-          c2.foreach {
-            // this branch should represent the D type
-            case Branch(c3) => assert(c3.length === 2)
-            case _ =>
-          }
-        }
-        case _ =>
-      }
+    it("instantiates classes whose params are not only primitives but also other classes ") {
+      val maybeTwoIntsTwoFloats = Instantiator.createInstance[TwoIntsTwoFloats]
+      maybeTwoIntsTwoFloats shouldBe a [TwoIntsTwoFloats]
     }
-    case _ =>
+
+    it("instantiates classes without parameters") {
+      val maybeA = Instantiator.createInstance[A]
+      maybeA shouldBe a [A]
+    }
+
+    it("instantiates BEHEMOTH classes") {
+      val maybeHellOnEarth = Instantiator.createInstance[HellOnEarth]
+      maybeHellOnEarth shouldBe a [HellOnEarth]
+    }
   }
 }
