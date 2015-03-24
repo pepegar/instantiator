@@ -23,17 +23,29 @@ trait TypesTreeMaker {
    * */
   def generateTypesTree(tpe: Type): Tree[ClassSymbol] = {
     val symbol = tpe.typeSymbol
-    val classProperties = getConstructor(tpe).paramLists(0)
-
-    // HACK: this is the ugliest shit ever... i'm not proud of it.
-    //       I need to find a way to get if the type has literal representation
-    //       in the language.
-    val shouldLeaf = classProperties.isEmpty || symbol.fullName == "java.lang.String"
+    val constructorParams = getConstructor(tpe).paramLists(0)
+    val shouldLeaf = isLiteral(tpe) || constructorParams.isEmpty
 
     shouldLeaf match {
       case true => Leaf(Some(symbol.fullName), symbol.asClass)
-      case false => Branch(Some(symbol.fullName), classProperties.map(s => generateTypesTree(s.typeSignature)).toList)
+      case false => Branch(Some(symbol.fullName), constructorParams.map(s => generateTypesTree(s.typeSignature)).toList)
     }
+  }
+
+  def isLiteral(tpe: Type): Boolean = {
+    val literals: List[String] = List(
+      "scala.Int",
+      "scala.Float",
+      "java.lang.String",
+      "scala.Boolean",
+      "scala.Byte",
+      "scala.Short",
+      "scala.Char",
+      "scala.Long",
+      "scala.Double"
+    )
+
+    literals contains tpe.typeSymbol.fullName
   }
 
   def getConstructor(tpe: Type) = {
