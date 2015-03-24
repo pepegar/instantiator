@@ -79,16 +79,16 @@ Restrictions
 ------------
 
 * Right now, `Instantiator` will use the first constructor it will found, so
-it's better not to try to instantiat classes with more than one constructor.
+it's better not to try to instantiate classes with more than one constructor.
 
 * It is not tested against collections.  I don't know what approach to follow in
-in the number of elements to generate for the collection.  Probably a random
+the number of elements to generate for the collection.  Probably a random
 integer from 1 to 100 would be enough.
 
 * Type erasure.  In the JVM, type parameters are erased at compile time, and
 this library runs at runtime.  What the f*ck can I do with that?  I mean, it is
 possible to kind of infer the inner type of any parametric data type by
-inspecting one element of it and getting it type.  However, that raises two more
+inspecting one element of it and getting its type.  However, that raises two more
 questions:
   - The type of that element may lead you to a wrong type, for example:
   ```
