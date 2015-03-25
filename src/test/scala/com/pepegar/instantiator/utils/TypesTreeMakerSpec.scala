@@ -5,6 +5,25 @@ import scala.reflect.runtime.universe._
 import com.pepegar.instantiator.tree.{Branch, Tree, Leaf}
 
 class TypesTreeMakerSpec extends FunSpec with Matchers {
+  describe("isLiteral") {
+    it("should work for all literals") {
+      new {} with TypesTreeMaker {
+        val literals = List(
+          typeOf[String],
+          typeOf[Int],
+          typeOf[Float],
+          typeOf[Boolean],
+          typeOf[Byte],
+          typeOf[Short],
+          typeOf[Char],
+          typeOf[Long],
+          typeOf[Double])
+
+        literals.foreach(l => assert(isLiteral(l)))
+      }
+    }
+  }
+
   describe("generateTypesTree") {
     it("should create a valid tree given a type instance.") {
       new {} with TypesTreeMaker {
