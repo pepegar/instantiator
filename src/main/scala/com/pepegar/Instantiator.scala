@@ -19,11 +19,11 @@ object Instantiator
    *
    * @author pepegar
    */
-  def createInstance[T](implicit tag: TypeTag[T]) = {
+  def createInstance[T](implicit tag: TypeTag[T]): T = {
     val t = typeOf[T]
     val typesTree = generateTypesTree(t)
     val valuesTree = mapToValuesTree(typesTree)
 
-    instantiate(valuesTree)
+    instantiate(valuesTree).asInstanceOf[T]
   }
 }
